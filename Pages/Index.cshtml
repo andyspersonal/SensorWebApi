@@ -1,0 +1,72 @@
+﻿@page
+@{
+    ViewData["Title"] = "Index";
+}
+
+<script type="text/javascript">
+
+   function showTemperature() {
+      $("#temperature").html("Getting Temperature");
+      var promise = GetLatestTemperature();
+      promise.done(function (data) {
+         $("#temperature").html(data.temperature + ' ' + '&deg;C');
+         var day = moment(data.takenDateTime);
+         $('#dateTaken').html(day.format("DD/MM/YYYY HH:mm:ss"));
+      });
+   }
+
+   function showMaxTemperature() {
+      $("#maxTemperature").html("Getting Temperature");
+      var promise = GetMaxTemperature(moment().format("YYYY-MM-DD"));
+      promise.done(function (data) {
+         $("#maxTemperature").html(data.temperature + ' ' + '&deg;C');
+         var day = moment(data.takenDateTime);
+         $('#maxTempDateTaken').html(day.format("DD/MM/YYYY HH:mm:ss"));
+      });
+          
+   }
+
+   function showMinTemperature() {
+      $("#minTemperature").html("Getting Temperature");
+      var promise = GetMinTemperature(moment().format("YYYY-MM-DD"));
+      promise.done(function (data) {
+         $("#minTemperature").html(data.temperature + ' ' + '&deg;C');
+         var day = moment(data.takenDateTime);
+         $('#minTempDateTaken').html(day.format("DD/MM/YYYY HH:mm:ss"));
+      });
+
+   }
+
+
+   function showAllTemperatures() {
+      showTemperature();
+      showMaxTemperature();
+      showMinTemperature();
+   }
+          
+   
+
+
+
+   $(document).ready(showAllTemperatures );
+</script>
+
+<div class="container">
+   <h1>Last Temperature</h1>
+   <h3>
+      <p id="temperature">Temperature</p>
+      <p id="dateTaken">Date Taken</p>
+   </h3>
+   <h1>Max Today</h1>
+   <h3>
+      <p id="maxTemperature">Temperature</p>
+      <p id="maxTempDateTaken">Date Taken</p>
+   </h3>
+   <h1>Min Today</h1>
+   <h3>
+      <p id="minTemperature">Temperature</p>
+      <p id="minTempDateTaken">Date Taken</p>
+   </h3>
+
+   <p><button type="button" class="btn  btn-primary" id="btn" value="get temp" onclick="showAllTemperatures()">Get Temperatures</button></p>
+</div>

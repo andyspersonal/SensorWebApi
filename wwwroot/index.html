@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <title></title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="script/webapi.js"></script>
+
+
+    <script type="text/javascript">
+        
+       function showTemperature() {
+          $("#temperature").html("Getting Temperature");
+          var promise = GetLatestTemperature();
+          promise.done(function (data) {
+             $("#temperature").html(data.temperature);
+             $('#dateTaken').html(new Date(data.takenDateTime).toString());
+          });
+          //document.write($.format.date("2009-12-18 10:54:50.546", "Test: dd/MM/yyyy"));
+       }
+
+       $(document).ready(showTemperature );
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Last Temperature</h1>
+       <h3>
+          <p id="temperature">Temperature</p>
+          <p id="dateTaken">Date Taken</p>
+       </h3>
+        <p><button type="button" class="btn  btn-primary" id="btn" value="get temp" onclick="showTemperature()">Get last Temperature</button></p>
+    </div>
+</body>
+</html>
