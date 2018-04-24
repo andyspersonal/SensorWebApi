@@ -23,6 +23,12 @@
          var day = moment(data.takenDateTime);
          $('#maxTempDateTaken').html(day.format("DD/MM/YYYY HH:mm:ss"));
       });
+      promise.fail(function (jqXHR, status, error) {
+         if (jqXHR.status == 404) {
+            $("#maxTemperature").html('no readings');
+            $('#maxTempDateTaken').html('');
+         }
+      });
           
    }
 
@@ -34,6 +40,14 @@
          var day = moment(data.takenDateTime);
          $('#minTempDateTaken').html(day.format("DD/MM/YYYY HH:mm:ss"));
       });
+      promise.fail(function (jqXHR, status, error) { 
+         if (jqXHR.status == 404) {
+            $("#minTemperature").html('no readings');
+            $('#minTempDateTaken').html('');
+
+         }
+      });
+
 
    }
 
@@ -42,31 +56,64 @@
       showTemperature();
       showMaxTemperature();
       showMinTemperature();
+      
    }
           
    
-
-
-
    $(document).ready(showAllTemperatures );
 </script>
 
 <div class="container">
-   <h1>Last Temperature</h1>
-   <h3>
-      <p id="temperature">Temperature</p>
-      <p id="dateTaken">Date Taken</p>
-   </h3>
-   <h1>Max Today</h1>
-   <h3>
-      <p id="maxTemperature">Temperature</p>
-      <p id="maxTempDateTaken">Date Taken</p>
-   </h3>
-   <h1>Min Today</h1>
-   <h3>
-      <p id="minTemperature">Temperature</p>
-      <p id="minTempDateTaken">Date Taken</p>
-   </h3>
+   <div class="row">
+      <div class="col-sm">
+         <h1>Last Temperature</h1>
+         <h3 id="temperature">Temperature</h3>
+         <h3 id="dateTaken">Date Taken</h3>
+      </div>
+      <div class="col-sm">
+         <h1>Max Today</h1>
+         <h3 id="maxTemperature">Temperature</h3>
+         <h3 id="maxTempDateTaken">Date Taken</h3>
+      </div>
+      <div class="col-sm">
+         <h1>Min Today</h1>
+         <h3 id="minTemperature">Temperature</h3>
+         <h3 id="minTempDateTaken">Date Taken</h3>
+      </div>
+   </div>
+      <div class="row">
+         <div class="col-sm">
+            <script type="text/javascript">
+               google.charts.setOnLoadCallback(drawChart);
+               function drawChart() {
+                  var data = google.visualization.arrayToDataTable([
+                     ['Label', 'Value'],
+                     ['Memory', 80]
+                  ]);
 
-   <p><button type="button" class="btn  btn-primary" id="btn" value="get temp" onclick="showAllTemperatures()">Get Temperatures</button></p>
+                  var options = {
+                     width: 400, height: 120,
+                     redFrom: 90, redTo: 100,
+                     yellowFrom: 75, yellowTo: 90,
+                     minorTicks: 5
+
+                  };
+
+                  var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+                  chart.draw(data, options);
+               }
+            </script>
+            <div id="chart_div" style="width:400px; height: 120px;"></div>
+         </div>
+         <div class="col-sm">
+
+         </div>
+         <div class="col-sm">
+
+         </div>
+      </div>
+  
+
+    <p><button type="button" class="btn  btn-primary" id="btn" value="get temp" onclick="showAllTemperatures()">Get Temperatures</button></p>
+
 </div>
