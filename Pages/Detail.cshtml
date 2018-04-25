@@ -1,0 +1,162 @@
+﻿@page
+@{
+   ViewData["Title"] = "Detail";
+}
+
+
+
+<script type="text/javascript">
+   google.charts.setOnLoadCallback(chartLoaded);
+
+
+   function chartLoaded() {
+      $(document).ready(chartLoadedAndDocuemntReady); 
+   }
+
+   function chartLoadedAndDocuemntReady() {
+      var startDate = moment().startOf('day');
+      var endDate = moment().startOf('day').add(1, 'days');
+      var displayEndDate = endDate.clone();
+      
+      $('#start').val(startDate.format('DD/MM/YYYY'));
+      $('#end').val(displayEndDate.add(-1, 'days').format('DD/MM/YYYY'));
+      var options = {
+         format: 'dd/mm/yyyy',
+         autoclose: true
+
+      };
+      $('#datepicker').datepicker(options);
+
+      updatePage(startDate, endDate);
+
+      
+
+      $('#datepicker').datepicker().on('changeDate', function (e) {
+         //get the start end end date and up date the page
+         var startDate = $('#start').datepicker('getDate');
+         var mStartDate = moment(startDate);
+         var endDate = $('#end').datepicker('getDate');
+         var mEndDate = moment(endDate);
+         mEndDate.add(1, 'days');
+         updatePage(mStartDate, mEndDate);
+         
+      });
+     
+   }
+
+   function updatePage(startDate, endDate) {
+
+      $("#headertext").html('Details for ' + startDate.format('DD/MM/YYYY'));
+
+      var promise = GetFindTemperaturesByDate(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
+      promise.done(function (data) {
+         var jsonData = data;
+         drawTable(jsonData);
+         drawCurveChart(jsonData);
+      });
+
+     
+   }
+   
+   function drawTable(jsonData) {
+      var data = new google.visualization.DataTable();
+      data.addColumn('date', 'Taken');
+      data.addColumn('number', 'Temperature');
+
+      //convert our json data
+      for (var i = 0; i < jsonData.length; i++) {
+         var reading = jsonData[i];
+         var d = new moment(reading.takenDateTime);
+         data.addRow([d.toDate(), reading.temperature]);
+      }
+
+      var monthYearFormatter = new google.visualization.DateFormat({
+         pattern: "dd/MM/yyy HH:mm:ss"
+      });
+      monthYearFormatter.format(data, 0);
+
+      //data.addRows([
+      //   [new Date('2018-04-26 10:00:00'),22.2]
+      //]);
+      var table = new google.visualization.Table(document.getElementById('table_div'));
+      table.draw(data, {showRowNumber: false, width: '100%',height:'100%'})
+   }
+
+   function drawCurveChart(jsonData) {
+      var data = new google.visualization.DataTable();
+      data.addColumn('date', 'Taken');
+      data.addColumn('number', 'Temperature');
+      
+      for (var i = 0; i < jsonData.length; i++) {
+         var reading = jsonData[i];
+         var d = new moment(reading.takenDateTime);
+         data.addRow([d.toDate(), reading.temperature]);
+      }
+
+      var monthYearFormatter = new google.visualization.DateFormat({
+         pattern: "dd/MM/yyy HH:mm:ss"
+      });
+      monthYearFormatter.format(data, 0);
+      //data.addRows([
+        // [new Date('2018-04-26 10:00:00'), 22.2],
+        // [new Date('2018-04-27 10:00:00'), 23.2],
+        // [new Date('2018-04-28 10:00:00'), 22.2],
+         //[new Date('2018-04-29 10:00:00'), 21.2],
+      //
+      //]);
+      var options = {
+         //title: 'Todays temperatures',
+         curveType: 'function',
+         legend: { position: 'bottom' },
+         hAxis: {
+            gridlines: {
+               count: -1,
+               units: {
+                  days: { format: ['MMM dd'] },
+                  hours: { format: ['HH:mm', 'ha'] },
+               }
+            }
+            
+         },
+         vAxis: {
+            title: 'Temperature'   
+
+
+            }
+            
+
+         ,
+         series: {
+            0: {
+               visibleInLegend: false
+
+            }
+         }
+      };
+      var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+      chart.draw(data, options);
+   }
+</script>
+
+<script>
+
+</script>
+
+
+
+
+<div class="container" id="sandbox-container">
+   <h2 id="headertext">Detail for </h2>
+   
+      <form>   
+         <div class="form-group input-daterange" id="datepicker">
+            <label for="start">Start</label> 
+            <input type="text" class="form-control" name="start" id="start" style="width: 180px" />
+               
+            <label for="End">End</label>
+            <input type="text" class="form-control" name="end" id="end" style="width: 180px" />
+         </div>
+      </form>
+   <div id="curve_chart"></div>
+   <div id="table_div"></div>
+</div>

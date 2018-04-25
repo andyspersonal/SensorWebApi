@@ -86,16 +86,31 @@
             <script type="text/javascript">
                google.charts.setOnLoadCallback(drawChart);
                function drawChart() {
+             
+                  //get the temperature form the server
+                  var promise = GetLatestTemperature();
+                  promise.done(function (data) {
+                     var tmp = data.temperature;
+                     drawChart2(tmp);
+                  });
+               }
+               function drawChart2(tmp) {
                   var data = google.visualization.arrayToDataTable([
                      ['Label', 'Value'],
-                     ['Memory', 80]
+                     ['Last', tmp]
                   ]);
 
                   var options = {
                      width: 400, height: 120,
-                     redFrom: 90, redTo: 100,
-                     yellowFrom: 75, yellowTo: 90,
-                     minorTicks: 5
+                     greenFrom: -10, greenTo: 0,
+                     redFrom: 20, redTo: 40,
+                     yellowFrom: 0, yellowTo: 20,
+                     minorTicks: 5,
+                     min: -10,
+                     max: 40,
+                     greenColor: '#0000ff',
+                     yellowColor: '#ffffff'
+
 
                   };
 

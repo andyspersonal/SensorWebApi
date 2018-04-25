@@ -33,3 +33,13 @@ function GetMinTemperature(dateForMax) {
       dataType: 'json'
    });
 }
+
+function GetFindTemperaturesByDate(startdate, enddate) {
+   jQuery.support.cors = true;
+   var uri = baseUri + 'TemperatureReading/Search?startdate=' + startdate + '&enddate=' + enddate;
+   return $.ajax({
+      url: uri,
+      type: 'GET',
+      dataType: 'json'
+   });
+}
