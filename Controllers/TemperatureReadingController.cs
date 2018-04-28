@@ -25,6 +25,7 @@ namespace SensorWebApi.Controllers
         {
             LogIpAddress();
             return _context.TemperatureReadings.ToList();
+            //Dummy chage on mac;
         }
 
         [HttpGet("GetLatest")]
