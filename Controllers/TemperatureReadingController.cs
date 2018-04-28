@@ -23,12 +23,14 @@ namespace SensorWebApi.Controllers
         [HttpGet]
         public IEnumerable<TemperatureReading> GetAll()
         {
+            LogIpAddress();
             return _context.TemperatureReadings.ToList();
         }
 
         [HttpGet("GetLatest")]
         public IActionResult GetLatest()
         {
+            LogIpAddress();
             var item = _context.TemperatureReadings.OrderByDescending(t => t.Id).FirstOrDefault();
             if (item == null)
             {
@@ -40,6 +42,7 @@ namespace SensorWebApi.Controllers
       [HttpGet("GetMax")]
       public IActionResult GetMax(DateTime dateForMax)
       {
+         LogIpAddress();
          DateTime start = dateForMax.Date;
          DateTime end = start.AddDays(1);
          var item = _context.TemperatureReadings.Where(t => t.TakenDateTime > start && t.TakenDateTime < end).OrderByDescending(t => t.Temperature).FirstOrDefault();
@@ -54,6 +57,7 @@ namespace SensorWebApi.Controllers
       [HttpGet("GetMin")]
       public IActionResult GetMin(DateTime dateForMin)
       {
+         LogIpAddress();
          DateTime start = dateForMin.Date;
          DateTime end = start.AddDays(1);
          var item = _context.TemperatureReadings.Where(t => t.TakenDateTime > start && t.TakenDateTime < end).OrderBy(t => t.Temperature).FirstOrDefault();
@@ -68,6 +72,7 @@ namespace SensorWebApi.Controllers
       [HttpGet("GetTop")]
       public IEnumerable<TemperatureReading> GetTop(int count)
       {
+         LogIpAddress();
          var items = _context.TemperatureReadings.OrderByDescending(s => s.Id).Take(count);
          return items;
       }
@@ -76,12 +81,14 @@ namespace SensorWebApi.Controllers
       [HttpGet("Search", Name = "GetTemperatureByDateRange")]
       public IEnumerable<TemperatureReading> Search(DateTime startdate, DateTime enddate)
       {
+         LogIpAddress();
          var items = _context.TemperatureReadings.Where(s => s.TakenDateTime > startdate && s.TakenDateTime < enddate).ToList();
          return items;        
       }
         [HttpGet("{id}", Name = "GetTemperatureReading")]
         public IActionResult GetById(long id)
         {
+            LogIpAddress();
             var item = _context.TemperatureReadings.FirstOrDefault(t => t.Id == id);
             if(item == null)
             {
@@ -93,6 +100,13 @@ namespace SensorWebApi.Controllers
         [HttpPost]  
         public IActionResult Create([FromBody] TemperatureReading reading)
         {
+            LogIpAddress();
+            if(!this.Request.Host.ToString().ToLower().Contains("localhost"))
+            {
+               return this.Unauthorized();
+            }
+            
+            var tst = this.Request;
             if(reading == null)
             {
                 return BadRequest();
@@ -129,15 +143,22 @@ namespace SensorWebApi.Controllers
         }
         */
         // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+        
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        
+
+      private void LogIpAddress()
+      {
+         if(this.HttpContext != null && this.HttpContext.Connection != null && this.HttpContext.Connection.RemoteIpAddress != null)
+         {
+
+            string message = DateTime.Now.ToString() + ": ";
+            message += "Host: " + this.Request.Host;
+            message += ", Path: " + this.Request.Path;
+            message += ", Remote IP: " + this.HttpContext.Connection.RemoteIpAddress;
+            Console.WriteLine(message);
+         }
+         
+      }
     }
 }
