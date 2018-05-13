@@ -24,6 +24,14 @@ namespace SensorWebApi
          BuildWebHost(args).Run();
          //to public run dotnet publish -r linux-arm
          // see https://github.com/dotnet/core/blob/master/samples/RaspberryPiInstructions.md
+            //to copy to pi run 
+            //scp -rp linux-arm pi@piserver.local:/home/pi/temperature
+            //or use winscp
+            //to control services ont he pi
+            //systemctrl start sesrialread.service
+            //systemctrl start webapi.service
+            //service files are in /lib/systemd/system
+
       }
 
       public static IWebHost BuildWebHost(string[] args) =>
