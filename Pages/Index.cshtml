@@ -1,6 +1,6 @@
 ﻿@page
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Green House";
 }
 
 <script type="text/javascript">
@@ -81,54 +81,5 @@
          <h3 id="minTempDateTaken">Date Taken</h3>
       </div>
    </div>
-      <div class="row">
-         <div class="col-sm">
-            <script type="text/javascript">
-               google.charts.setOnLoadCallback(drawChart);
-               function drawChart() {
-             
-                  //get the temperature form the server
-                  var promise = GetLatestTemperature();
-                  promise.done(function (data) {
-                     var tmp = data.temperature;
-                     drawChart2(tmp);
-                  });
-               }
-               function drawChart2(tmp) {
-                  var data = google.visualization.arrayToDataTable([
-                     ['Label', 'Value'],
-                     ['Last', tmp]
-                  ]);
-
-                  var options = {
-                     width: 400, height: 120,
-                     greenFrom: -10, greenTo: 0,
-                     redFrom: 20, redTo: 40,
-                     yellowFrom: 0, yellowTo: 20,
-                     minorTicks: 5,
-                     min: -10,
-                     max: 40,
-                     greenColor: '#0000ff',
-                     yellowColor: '#ffffff'
-
-
-                  };
-
-                  var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
-                  chart.draw(data, options);
-               }
-            </script>
-            <div id="chart_div" style="width:400px; height: 120px;"></div>
-         </div>
-         <div class="col-sm">
-
-         </div>
-         <div class="col-sm">
-
-         </div>
-      </div>
-  
-
-    <p><button type="button" class="btn  btn-primary" id="btn" value="get temp" onclick="showAllTemperatures()">Get Temperatures</button></p>
-
+    
 </div>
