@@ -46,7 +46,7 @@ namespace SensorWebApi.Controllers
          LogIpAddress();
          DateTime start = dateForMax.Date;
          DateTime end = start.AddDays(1);
-         var item = _context.TemperatureReadings.Where(t => t.TakenDateTime > start && t.TakenDateTime < end).OrderByDescending(t => t.Temperature).FirstOrDefault();
+         var item = _context.TemperatureReadings.Where(t => t.TakenDateTime > start && t.TakenDateTime < end && t.Temperature > -20 && t.Temperature < 60).OrderByDescending(t => t.Temperature).FirstOrDefault();
          if (item == null)
          {
             return NotFound();
@@ -61,7 +61,7 @@ namespace SensorWebApi.Controllers
          LogIpAddress();
          DateTime start = dateForMin.Date;
          DateTime end = start.AddDays(1);
-         var item = _context.TemperatureReadings.Where(t => t.TakenDateTime > start && t.TakenDateTime < end).OrderBy(t => t.Temperature).FirstOrDefault();
+            var item = _context.TemperatureReadings.Where(t => t.TakenDateTime > start && t.TakenDateTime < end && t.Temperature > -20 && t.Temperature < 60).OrderBy(t => t.Temperature).FirstOrDefault();
          if (item == null)
          {
             return NotFound();
@@ -83,7 +83,7 @@ namespace SensorWebApi.Controllers
       public IEnumerable<TemperatureReading> Search(DateTime startdate, DateTime enddate)
       {
          LogIpAddress();
-         var items = _context.TemperatureReadings.Where(s => s.TakenDateTime > startdate && s.TakenDateTime < enddate).ToList();
+            var items = _context.TemperatureReadings.Where(s => s.TakenDateTime > startdate && s.TakenDateTime < enddate && s.Temperature > -20 && s.Temperature < 60).ToList();
          return items;        
       }
         [HttpGet("{id}", Name = "GetTemperatureReading")]
