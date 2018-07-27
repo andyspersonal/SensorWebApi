@@ -22,14 +22,14 @@ namespace SensorWebApi
          Configuration = builder.Build();
          Console.WriteLine("usein memory = " + Configuration["useInMemoryStore"]);
          BuildWebHost(args).Run();
-         //to public run dotnet publish -r linux-arm
+         //to public run dotnet publish -r linux-arm frpom the project directory
          // see https://github.com/dotnet/core/blob/master/samples/RaspberryPiInstructions.md
             //to copy to pi run 
             //scp -rp linux-arm pi@piserver.local:/home/pi/temperature
             //or use winscp
             //to control services ont he pi
-            //systemctrl start sesrialread.service
-            //systemctrl start webapi.service
+            //systemctl start sesrialread.service
+            //systemctl start webapi.service
             //service files are in /lib/systemd/system
 
       }
